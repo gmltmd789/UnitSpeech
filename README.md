@@ -14,8 +14,11 @@
   - **To improve TTS (Text-to-Speech) pronunciation, an IPA-based phonemizer is used.** 
   - **To improve VC (Voice Conversion) pronunciation, a contentvec encoder is introduced.**
 
-## Ethical Considerations
-UnitSpeech was developed for research purposes. The code authors do not take any responsibility for the samples generated using this model. Furthermore, to prevent potential misuse, we are planning to release a classification model that can distinguish samples generated with this model.
+# Warning: Ethical & Legal Considerations
+1. **UnitSpeech was created with the primary objective of facilitating research endeavors.**
+2. **When utilizing samples generated using this model, it is crucial to clearly disclose that the samples were generated using AI technology. Additionally, it is necessary to provide the sources of the audio used in the generation process.**
+3. **We notify that users take full responsibility for any possible negative outcomes and legal & ethical issues that may arise due to their misuse of the model.**
+4. **As a precautionary measure against possible misapplication, we intend to introduce a classification model capable of discerning samples generated through the utilization of this model.**
 
 ## TO DO
 - [ ] Release a classification model to distinguish samples from UnitSpeech
@@ -117,6 +120,10 @@ You can adjust the speed of speaking as arguments. (default: 1.0) <br>
 - length_scale : Increasing its value (> 1.0) makes the speech slow, while decreasing its value (< 1.0) makes the speech fast <br>
 
 **Note: Using excessively large gradient scales can degrade the audio quality.**
+
+## License
+
+The code and model weights of UnitSpeech are released under the CC BY-NC-SA 4.0 license.
 
 ## References
 * [BigVGAN](https://github.com/NVIDIA/BigVGAN) (for vocoder)
