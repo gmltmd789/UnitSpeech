@@ -1,0 +1,11 @@
+.idea
+
+.ipynb_checkpoints
+notebooks/.ipynb_checkpoints
+
+#unitspeech/checkpoints
+unitspeech/outputs
+unitspeech/speaker_encoder/checkpts
+unitspeech/vocoder/checkpts
+
+unitspeech.egg-info

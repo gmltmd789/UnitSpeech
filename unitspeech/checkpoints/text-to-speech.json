@@ -1,0 +1,40 @@
+{
+  "data": {
+    "n_feats": 80,
+    "n_fft": 1024,
+    "hop_length": 256,
+    "win_length": 1024,
+    "sampling_rate": 22050,
+    "mel_fmin": 0.0,
+    "mel_fmax": 8000.0
+  },
+  "encoder": {
+    "n_channels": 192,
+    "filter_channels": 768,
+    "n_layers": 6,
+    "kernel_size": 3,
+    "p_dropout": 0.1,
+    "n_heads": 2,
+    "window_size": 4
+  },
+  "duration_predictor": {
+    "in_channels": 192,
+    "filter_channels": 256,
+    "kernel_size": 3,
+    "p_dropout": 0.1,
+    "spk_emb_dim": 256
+  },
+  "decoder": {
+    "dim": 128,
+    "dim_mults": [1, 2, 4, 8],
+    "pe_scale": 1000,
+    "beta_min": 0.05,
+    "beta_max": 20.0,
+    "spk_emb_dim": 256
+  },
+  "train": {
+    "out_size_second": 2,
+    "vocoder_config_path": "unitspeech/vocoder/checkpts/bigvgan-config.json",
+    "vocoder_ckpt_path": "unitspeech/vocoder/checkpts/bigvgan.pt"
+  }
+}
