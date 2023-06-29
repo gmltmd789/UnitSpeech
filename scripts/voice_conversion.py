@@ -58,6 +58,10 @@ def main(args, hps):
     contentvec_extractor = HubertModelWithFinalProj.from_pretrained("lengyue233/content-vec-best")
     _ = contentvec_extractor.cuda().eval()
 
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
+    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
+
     wav, sr = librosa.load(args.source_path)
     wav = torch.FloatTensor(wav).unsqueeze(0)
     resample_fn = torchaudio.transforms.Resample(sr, 16000).to("cuda")
@@ -106,6 +110,9 @@ def main(args, hps):
             args, contentvec_encoder, unitspeech,
             contentvec, contentvec_length, mel_length, spk_emb, len(hps.decoder.dim_mults) - 1
         )
+
+        mel_generated = ((mel_generated + 1) / 2 * (mel_max.to(mel_generated.device) - mel_min.to(mel_generated.device))
+                         + mel_min.to(mel_generated.device))
 
         audio_generated = vocoder.forward(mel_generated).cpu().squeeze().clamp(-1, 1).numpy()
 

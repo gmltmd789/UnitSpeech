@@ -9,8 +9,7 @@ from tqdm import tqdm
 
 from unitspeech.unitspeech import UnitSpeech
 from unitspeech.encoder import Encoder
-from unitspeech.speaker_encoder.speaker_encoder import SpeechEmbedder
-from unitspeech.speaker_encoder.util import extract_speaker_embedding
+from unitspeech.speaker_encoder.ecapa_tdnn import ECAPA_TDNN_SMALL
 from unitspeech.textlesslib.textless.data.speech_encoder import SpeechEncoder
 from unitspeech.util import HParams, fix_len_compatibility, process_unit, generate_path, sequence_mask
 from unitspeech.vocoder.env import AttrDict
@@ -77,9 +76,9 @@ def main(args, hps):
     vocoder.remove_weight_norm()
 
     print('Initializing Speaker Encoder...')
-    spk_embedder = SpeechEmbedder()
+    spk_embedder = ECAPA_TDNN_SMALL(feat_dim=1024, feat_type="wavlm_large", config_path=None)
     state_dict = torch.load(args.speaker_encoder_path, map_location=lambda storage, loc: storage)
-    spk_embedder.load_state_dict(state_dict['embedder_net'], strict=False)
+    spk_embedder.load_state_dict(state_dict['model'], strict=False)
     _ = spk_embedder.cuda().eval()
 
     print('Initializing Unit Extracter...')
@@ -95,16 +94,21 @@ def main(args, hps):
     )
     _ = unit_extractor.cuda().eval()
 
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
+    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
+
     # Load the reference audio and extract mel-spectrogram and speaker embeddings.
     wav, sr = librosa.load(args.reference_path)
-    wav = torch.FloatTensor(wav)
-    spk_emb = extract_speaker_embedding(wav, spk_embedder, **hps.data).unsqueeze(0)
-    wav = wav.unsqueeze(0)
+    wav = torch.FloatTensor(wav).unsqueeze(0)
     mel = mel_spectrogram(wav, hps.data.n_fft, hps.data.n_feats, hps.data.sampling_rate, hps.data.hop_length,
                           hps.data.win_length, hps.data.mel_fmin, hps.data.mel_fmax, center=False)
+    mel = (mel - mel_min) / (mel_max - mel_min) * 2 - 1
     mel = mel.cuda()
     resample_fn = torchaudio.transforms.Resample(sr, 16000).cuda()
     wav = resample_fn(wav.cuda())
+    spk_emb = spk_embedder(wav)
+    spk_emb = spk_emb / spk_emb.norm()
 
     # Extract the units and unit durations to be used for fine-tuning.
     encoded = unit_extractor(wav.to("cuda"))

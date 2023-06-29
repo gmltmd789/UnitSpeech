@@ -52,6 +52,10 @@ def main(args, hps):
         language='en-us', preserve_punctuation=True, with_stress=True, language_switch="remove-flags"
     )
 
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
+    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
+
     # Initialize & load model
     text_encoder = Encoder(
         n_vocab=len(symbols) + 1,
@@ -103,6 +107,8 @@ def main(args, hps):
             phoneme, phoneme_lengths, spk_emb, len(hps.decoder.dim_mults) - 1
         )
 
+        mel_generated = ((mel_generated + 1) / 2 * (mel_max.to(mel_generated.device) - mel_min.to(mel_generated.device))
+                         + mel_min.to(mel_generated.device))
         audio_generated = vocoder.forward(mel_generated).cpu().squeeze().clamp(-1, 1).numpy()
 
     if "/" in args.generated_sample_path:

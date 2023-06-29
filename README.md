@@ -4,7 +4,12 @@
 ### [Paper](https://arxiv.org/abs/2306.16083)
 ### [Audio demo](https://unitspeech.github.io/)
 
-## Updates (Updated components compared to the version of INTERSPEECH.)
+## Updates
+### 2023.06.29 : We update our code and checkpoints for better pronunciation!
+- **Extract reference speaker embeddings using the [WavLM](https://github.com/microsoft/UniSpeech/tree/main/downstreams/speaker_verification#pre-trained-models)-based speaker encoder.**
+- **Modeling normalized mel-spectrogram (-1 ~ 1)**
+
+### 2023.06.28 : Updated components compared to the version of INTERSPEECH.
 - **Change in vocoder (from HiFi-GAN to BigVGAN).**
 - **Support for speaker classifier-free guidance (advantageous for adapting to more unique voices.)**
 - **Change "training-free text classifier-free guidance" to "text classifier-free guidance" (learning text unconditional embedding).**
@@ -12,6 +17,7 @@
 - **Substantial improvement in pronunciation accuracy**
   - **To improve TTS (Text-to-Speech) pronunciation, an IPA-based phonemizer is used.** 
   - **To improve VC (Voice Conversion) pronunciation, a contentvec encoder is introduced.**
+
 
 # Warning: Ethical & Legal Considerations
 1. **UnitSpeech was created with the primary objective of facilitating research endeavors.**
@@ -38,6 +44,7 @@ conda activate unitspeech
 git clone https://github.com/gmltmd789/UnitSpeech.git
 cd UnitSpeech
 pip install -e .
+pip install --no-deps s3prl==0.4.10
 ```
 
 ## Pretrained Models
@@ -49,7 +56,7 @@ pip install -e .
 |text_encoder.pt|Used for adaptive text-to-speech tasks.|
 |duration_predictor.pt|Used for adaptive text-to-speech tasks.|
 |pretrained_decoder.pt|Used for all adaptive speech synthesis tasks.|
-|speaker_encoder.pt|Used for extracting speaker embeddings.|
+|speaker_encoder.pt|Used for extracting [speaker embeddings](https://github.com/microsoft/UniSpeech/tree/main/downstreams/speaker_verification#pre-trained-models).|
 |bigvgan.pt|[Vocoder](https://github.com/NVIDIA/BigVGAN) checkpoint.|
 |bigvgan-config.json|Configuration for the vocoder.|
 
@@ -131,7 +138,7 @@ The code and model weights of UnitSpeech are released under the CC BY-NC-SA 4.0 
 * [VITS](https://github.com/jaywalnut310/vits) (for text & IPA phoneme sequence processing)
 * [Grad-TTS](https://github.com/huawei-noah/Speech-Backbones/tree/main/Grad-TTS) (for overall architecture and code)
 * [denoising-diffusion-pytorch](https://github.com/rosinality/denoising-diffusion-pytorch) (for diffusion-based sampler)
-* [Pytorch_Speaker_Verification](https://github.com/HarryVolek/PyTorch_Speaker_Verification) (for speaker embedding extraction)
+* [WavLM](https://github.com/microsoft/UniSpeech/tree/main/downstreams/speaker_verification) (for speaker embedding extraction)
 
 ## Citation
 ```
