@@ -1,8 +1,6 @@
 ## UnitSpeech: Speaker-adaptive Speech Synthesis with Untranscribed Data (INTERSPEECH 2023, Oral)
 #### Heeseung Kim, Sungwon Kim, Jiheum Yeom, Sungroh Yoon
 ![model-1](https://github.com/gmltmd789/UnitSpeech/assets/49265950/44cb4991-abb0-44b2-81fd-fce92cc1f3f1)
-<br><br>
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1jAglTVrBNeEQbOAJ3T_YRotoKqCBPNn9?usp=sharing)
 ### [Paper](https://arxiv.org/abs/2306.16083)
 ### [Audio demo](https://unitspeech.github.io/)
 
