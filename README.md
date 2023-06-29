@@ -133,3 +133,15 @@ The code and model weights of UnitSpeech are released under the CC BY-NC-SA 4.0 
 * [Grad-TTS](https://github.com/huawei-noah/Speech-Backbones/tree/main/Grad-TTS) (for overall architecture and code)
 * [denoising-diffusion-pytorch](https://github.com/rosinality/denoising-diffusion-pytorch) (for diffusion-based sampler)
 * [Pytorch_Speaker_Verification](https://github.com/HarryVolek/PyTorch_Speaker_Verification) (for speaker embedding extraction)
+
+## Citation
+```
+@misc{kim2023unitspeech,
+      title={UnitSpeech: Speaker-adaptive Speech Synthesis with Untranscribed Data}, 
+      author={Heeseung Kim and Sungwon Kim and Jiheum Yeom and Sungroh Yoon},
+      year={2023},
+      eprint={2306.16083},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD}
+}
+```
