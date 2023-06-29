@@ -2,7 +2,7 @@
 #### Heeseung Kim, Sungwon Kim, Jiheum Yeom, Sungroh Yoon
 ![model-1](https://github.com/gmltmd789/UnitSpeech/assets/49265950/44cb4991-abb0-44b2-81fd-fce92cc1f3f1)
 
-### [Paper](https://unitspeech.github.io/)
+### [Paper](https://arxiv.org/abs/2306.16083)
 ### [Audio demo](https://unitspeech.github.io/)
 
 ## Updates (Updated components compared to the version of INTERSPEECH.)
