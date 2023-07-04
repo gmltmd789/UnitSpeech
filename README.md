@@ -7,9 +7,13 @@
 ### [Audio demo](https://unitspeech.github.io/)
 
 ## Updates
-### 2023.06.29 : We update our code and checkpoints for better pronunciation!
+### 2023.07.04 : We changed the normalization method for better speaker similarity.
+- **We normalized the mel-spectrogram of the reference audio during fine-tuning using the min and max values of the reference audio's mel-spectrogram, rather than the min and max values obtained from the entire LibriTTS train set.**
+  - **We observed that this modification helped improve speaker similarity.**
+
+### 2023.06.29 : We update our code and checkpoints for better pronunciation.
 - **Extract reference speaker embeddings using the [WavLM](https://github.com/microsoft/UniSpeech/tree/main/downstreams/speaker_verification#pre-trained-models)-based speaker encoder.**
-- **Modeling normalized mel-spectrogram (-1 ~ 1)**
+- **Modeling normalized mel-spectrogram (-1 ~ 1).**
 
 ### 2023.06.28 : Updated components compared to the version of INTERSPEECH.
 - **Change in vocoder (from HiFi-GAN to BigVGAN).**
@@ -120,7 +124,7 @@ You can adjust the number of diffusion steps, text gradient scale, and speaker g
 - text_gradient_scale : responsible for pronunciation accuracy and audio quality. Increasing its value makes the pronunciation of the samples more accurate.<br>
 - spk_gradient_scale : responsible for speaker similarity. Increasing its value generates voices that are closer to the reference speech.<br>
 
-By default, text gradient scale is set to 0.0, and speaker gradient scale is set to 1.0.<br>
+By default, text gradient scale is set to 1.0, and speaker gradient scale is set to 1.0.<br>
 **If you want better pronunciation and audio quality, please increase the value of "text_gradient_scale." This will slightly reduce speaker similarity.**<br>
 **If you want better speaker similarity, please increase the value of "spk_gradient_scale." This will slightly degrade pronunciation accuracy and audio quality.**<br>
 

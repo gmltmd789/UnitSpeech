@@ -94,15 +94,16 @@ def main(args, hps):
     )
     _ = unit_extractor.cuda().eval()
 
-    # Load the normalization parameters for mel-spectrogram normalization.
-    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
-    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
-
     # Load the reference audio and extract mel-spectrogram and speaker embeddings.
     wav, sr = librosa.load(args.reference_path)
     wav = torch.FloatTensor(wav).unsqueeze(0)
     mel = mel_spectrogram(wav, hps.data.n_fft, hps.data.n_feats, hps.data.sampling_rate, hps.data.hop_length,
                           hps.data.win_length, hps.data.mel_fmin, hps.data.mel_fmax, center=False)
+
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = mel.min(-1, keepdim=True)[0]
+    mel_max = mel.max(-1, keepdim=True)[0]
+
     mel = (mel - mel_min) / (mel_max - mel_min) * 2 - 1
     mel = mel.cuda()
     resample_fn = torchaudio.transforms.Resample(sr, 16000).cuda()
@@ -191,7 +192,9 @@ def main(args, hps):
     _ = unitspeech.eval()
     torch.save({
         'model': unitspeech.state_dict(),
-        'spk_emb': spk_emb.cpu()},
+        'spk_emb': spk_emb.cpu(),
+        'mel_min': mel_min,
+        'mel_max': mel_max},
         f=args.output_decoder_path
     )
 

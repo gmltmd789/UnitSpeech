@@ -52,10 +52,6 @@ def main(args, hps):
         language='en-us', preserve_punctuation=True, with_stress=True, language_switch="remove-flags"
     )
 
-    # Load the normalization parameters for mel-spectrogram normalization.
-    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
-    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
-
     # Initialize & load model
     text_encoder = Encoder(
         n_vocab=len(symbols) + 1,
@@ -101,6 +97,10 @@ def main(args, hps):
 
     spk_emb = decoder_dict['spk_emb'].cuda()
 
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = decoder_dict['mel_min'].cuda()
+    mel_max = decoder_dict['mel_max'].cuda()
+
     with torch.no_grad():
         mel_generated = text_to_speech(
             args, text_encoder, duration_predictor, unitspeech,
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--text', type=str, required=True,
                         help='The desired transcript to be generated.')
-    parser.add_argument('--text_gradient_scale', type=float, default=0.0,
+    parser.add_argument('--text_gradient_scale', type=float, default=1.0,
                         help='Gradient scale of classifier-free guidance (cfg) for text condition. (0.0: wo cfg)')
     parser.add_argument('--spk_gradient_scale', type=float, default=1.0,
                         help='Gradient scale of classifier-free guidance (cfg) for speaker condition. (0.0: wo cfg)')

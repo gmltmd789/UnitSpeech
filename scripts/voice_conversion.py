@@ -58,10 +58,6 @@ def main(args, hps):
     contentvec_extractor = HubertModelWithFinalProj.from_pretrained("lengyue233/content-vec-best")
     _ = contentvec_extractor.cuda().eval()
 
-    # Load the normalization parameters for mel-spectrogram normalization.
-    mel_min = torch.load("unitspeech/parameters/mel_min.pt").unsqueeze(0).unsqueeze(-1)
-    mel_max = torch.load("unitspeech/parameters/mel_max.pt").unsqueeze(0).unsqueeze(-1)
-
     wav, sr = librosa.load(args.source_path)
     wav = torch.FloatTensor(wav).unsqueeze(0)
     resample_fn = torchaudio.transforms.Resample(sr, 16000).to("cuda")
@@ -105,6 +101,10 @@ def main(args, hps):
 
     spk_emb = decoder_dict['spk_emb'].cuda()
 
+    # Load the normalization parameters for mel-spectrogram normalization.
+    mel_min = decoder_dict['mel_min'].cuda()
+    mel_max = decoder_dict['mel_max'].cuda()
+
     with torch.no_grad():
         mel_generated = voice_conversion(
             args, contentvec_encoder, unitspeech,
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--source_path', type=str, required=True,
                         help='The source audio file path for voice conversion.')
-    parser.add_argument('--text_gradient_scale', type=float, default=0.0,
+    parser.add_argument('--text_gradient_scale', type=float, default=1.0,
                         help='Gradient scale of classifier-free guidance (cfg) for text condition. (0.0: wo cfg)')
     parser.add_argument('--spk_gradient_scale', type=float, default=1.0,
                         help='Gradient scale of classifier-free guidance (cfg) for speaker condition. (0.0: wo cfg)')
