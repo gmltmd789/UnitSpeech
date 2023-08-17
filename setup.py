@@ -7,7 +7,7 @@ setup(
         "amfm_decompy==1.0.11",
         "einops==0.6.1",
         "fairseq==0.12.2",
-        "inflect==6.0.4",
+        "inflect==7.0.0",
         "joblib==1.2.0",
         "librosa==0.10.0.post2",
         "matplotlib==3.7.1",
